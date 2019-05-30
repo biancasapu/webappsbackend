@@ -22,15 +22,15 @@ var pgp = require('pg-promise')();
 
 const db = pgp(process.env.DATABASE_URL);
 
-app.get("/a", (req, res) => {
+app.get("/", (req, res) => {
   console.log("Backend running on port " + app.get('port'))
   res.send({PORT : app.get('port')})
 }
 )
 
-app.get("/hello/:arg", (req, res) => {
+app.get("/notice/:column", (req, res) => {
   console.log("Request Started")
-  db.any('SELECT ' + req.params.arg + ' FROM notice')
+  db.any('SELECT ' + req.params.column + ' FROM notice')
     .then(function (data) {
       res.send({
         DATA: data
@@ -39,9 +39,9 @@ app.get("/hello/:arg", (req, res) => {
 })
 
 app.post("/submit", (req, res) => {
-  console.log("Submission recieved for $1 $2 $3 $4", req.body.id, req.body.title, req.body.description, req.body.location)
-  db.any("INSERT INTO notice (id, title, description, location) VALUES (" +
-      req.body.id + ", " + req.body.title + ", " + req.body.description + ", " + req.body.location + ")")
+  console.log("Submission receieved for $1 $2 $3 $4 $5", req.body.id, req.body.title, req.body.description, req.body.location, req.body.tags)
+  db.any("INSERT INTO notice (id, title, description, location, tags) VALUES (" +
+      req.body.id + ", " + req.body.title + ", " + req.body.description + ", " + req.body.location + ", " + req.body.tags + ")")
     .then(function (data) {
       res.send({
         DATA: data
