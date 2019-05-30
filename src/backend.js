@@ -50,4 +50,14 @@ app.post("/submit", (req, res) => {
     })
 })
 
-module.exports = app;
+require('greenlock-express').create({
+  email: 'bc3717@ic.ac.uk'     // The email address of the ACME user / hosting provider
+, agreeTos: true                    // You must accept the ToS as the host which handles the certs
+, communityMember: false             // Join the community to get notified of important updates
+, telemetry: false                   // Contribute telemetry data to the project
+, approvedDomains: ['webapps05backend.herokuapp.com', 'localhost']
+, app: app
+, store: require('greenlock-store-fs')
+ 
+//, debug: true
+}).listen(80, 443);
