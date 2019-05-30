@@ -22,7 +22,7 @@ var pgp = require('pg-promise')();
 
 const db = pgp('postgres://g1827105_u:BAN8z0ikdH@db.doc.ic.ac.uk:5432/g1827105_u');
 
-app.get("/", (req, res) => {
+app.get("/a", (req, res) => {
   console.log("Backend running on port " + app.get('port'))
   res.send({PORT : app.get('port')})
 }
