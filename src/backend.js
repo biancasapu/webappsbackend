@@ -36,16 +36,23 @@ app.get("/notice/:column", (req, res) => {
         DATA: data
       })
     })
+    .catch((err) => {
+      console.log(err)
+      res.send("500")
+    })
 })
 
+//post example: curl -d "id=69&title="test"&description="a"&community="a"&tags="ghsj"" -X POST localhost:8080/submit
 app.post("/submit", (req, res) => {
-  console.log("Submission receieved for $1 $2 $3 $4 $5", req.body.id, req.body.title, req.body.description, req.body.location, req.body.tags)
-  db.any("INSERT INTO notice (id, title, description, location, tags) VALUES (" +
-      req.body.id + ", " + req.body.title + ", " + req.body.description + ", " + req.body.location + ", " + req.body.tags + ")")
+  console.log("Submission receieved for", req.body.id, req.body.title, req.body.description, req.body.community, req.body.tags)
+  db.any("INSERT INTO notice (id, title, description, community, tags) VALUES (" +
+      req.body.id + ", \'" + req.body.title + "\', \'" + req.body.description + "\', \'" + req.body.community + "\', \'" + req.body.tags + "\')")
     .then(function (data) {
-      res.send({
-        DATA: data
-      })
+      res.send("200")
+    })
+    .catch((err) => {
+      console.log(err)
+      res.send("500")
     })
 })
 
