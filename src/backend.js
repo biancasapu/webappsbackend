@@ -1,3 +1,4 @@
+'use strict';
 const express = require('express')
 var bodyparser = require('body-parser')
 var cors = require('cors')
@@ -20,7 +21,7 @@ app.set('port', process.env.PORT || 8080)
 // DATABASE
 var pgp = require('pg-promise')();
 
-const db = pgp('postgres://g1827105_u:BAN8z0ikdH@db.doc.ic.ac.uk:5432/g1827105_u');
+const db = pgp(process.env.DATABASE);
 
 app.get("/a", (req, res) => {
   console.log("Backend running on port " + app.get('port'))
@@ -49,6 +50,4 @@ app.post("/submit", (req, res) => {
     })
 })
 
-app.listen(app.get('port'), function () {
-  console.log('Server listening on port ' + app.get('port'))
-})
+module.exports = app;
