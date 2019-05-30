@@ -17,3 +17,4 @@ jobs:
         api-key: 03b286f8-6ecb-460f-8e9d-1245a883a64c
       on:
         branch: master
+      
