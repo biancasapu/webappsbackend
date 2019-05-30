@@ -1,4 +1,3 @@
-'use strict';
 const express = require('express')
 var bodyparser = require('body-parser')
 var cors = require('cors')
@@ -21,9 +20,9 @@ app.set('port', process.env.PORT || 8080)
 // DATABASE
 var pgp = require('pg-promise')();
 
-const db = pgp(process.env.DATABASE);
+const db = pgp('postgres://g1827105_u:BAN8z0ikdH@db.doc.ic.ac.uk:5432/g1827105_u');
 
-app.get("/", (req, res) => {
+app.get("/a", (req, res) => {
   console.log("Backend running on port " + app.get('port'))
   res.send({PORT : app.get('port')})
 }
@@ -50,34 +49,6 @@ app.post("/submit", (req, res) => {
     })
 })
 
-require('greenlock-express').create({
-   // Let's Encrypt v2 is ACME draft 11
-   version: 'draft-11',
-
-   // Note: If at first you don't succeed, switch to staging to debug
-   // https://acme-staging-v02.api.letsencrypt.org/directory
-   server: 'https://acme-v02.api.letsencrypt.org/directory',
-
-   // Where the certs will be saved, MUST have write access
-   configDir: './secure/',
-
-   // You MUST change this to a valid email address
-   email: 'bc3717@imperial.ac.uk',
-
-   // You MUST change these to valid domains
-   // NOTE: all domains will validated and listed on the certificate
-   approveDomains: ['webapps05backend.herokuapp.com'],
-
-   // You MUST NOT build clients that accept the ToS without asking the user
-   agreeTos: true,
-
-   app: app,
-
-   // Join the community to get notified of important updates
-   communityMember: false,
-
-   // Contribute telemetry data to the project
-   telemetry: false
-
-   //, debug: true
-}).listen(80, 443);
+app.listen(app.get('port'), function () {
+  console.log('Server listening on port ' + app.get('port'))
+})
