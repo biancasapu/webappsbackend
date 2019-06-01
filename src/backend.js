@@ -30,7 +30,7 @@ app.get("/", (req, res) => {
 
 app.get("/notice/:column", (req, res) => {
   console.log("Request Started")
-  db.any('SELECT ' + req.params.column + ' FROM notice')
+  db.any('SELECT ' + req.params.column + ' FROM notice SORT BY id DESC')
     .then(function (data) {
       res.send({
         DATA: data
