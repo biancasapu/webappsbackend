@@ -44,7 +44,15 @@ app.get("/notice/:column", (req, res) => {
 
 app.get("/notice/max/:column", (req, res) => {
   console.log("Request Started");
-  db.any("SELECT max(" + req.params.column + ") FROM notice")
+  db.any(
+    "SELECT " +
+      req.params.column +
+      " FROM notice WHERE length(" +
+      req.params.column +
+      ") = (SELECT max(length(" +
+      req.params.column +
+      ")) from notice )"
+  )
     .then(function(data) {
       res.send({
         DATA: data
