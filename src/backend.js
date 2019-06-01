@@ -61,8 +61,8 @@ app.get("/notice/max/:column", (req, res) => {
 //post example: curl -d "id=69&title="test"&description="a"&community="a"&tags="ghsj"" -X POST localhost:8080/submit
 app.post("/submit", (req, res) => {
   console.log("Submission receieved for", req.body.id, req.body.title, req.body.description, req.body.community, req.body.tags)
-  db.any("INSERT INTO notice (id, title, description, community, tags) VALUES (" +
-      req.body.id + ", \'" + req.body.title + "\', \'" + req.body.description + "\', \'" + req.body.community + "\', \'" + req.body.tags + "\')")
+  db.any("INSERT INTO notice (id, title, description, community, tags, pic1) VALUES (" +
+      req.body.id + ", \'" + req.body.title + "\', \'" + req.body.description + "\', \'" + req.body.community + "\', \'" + req.body.tags + "\', \'" + req.body.pic1 + "\')" )
     .then(function (data) {
       res.send("200")
     })
