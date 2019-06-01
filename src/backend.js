@@ -42,6 +42,22 @@ app.get("/notice/:column", (req, res) => {
     })
 })
 
+
+app.get("/notice/max/:column", (req, res) => {
+  console.log("Request Started")
+  db.any('SELECT ' + req.params.column + ' FROM notice')
+    .then(function (data) {
+      res.send({
+        DATA: data
+      })
+    })
+    .catch((err) => {
+      console.log(err)
+      res.send("500")
+    })
+})
+
+
 //post example: curl -d "id=69&title="test"&description="a"&community="a"&tags="ghsj"" -X POST localhost:8080/submit
 app.post("/submit", (req, res) => {
   console.log("Submission receieved for", req.body.id, req.body.title, req.body.description, req.body.community, req.body.tags)
