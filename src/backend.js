@@ -51,7 +51,10 @@ app.get("/notice/max/:column", (req, res) => {
       req.params.column +
       ") = (SELECT max(length(" +
       req.params.column +
-      ")) from notice )"
+      ")) from notice )" +
+      " ORDER BY " +
+      req.params.column +
+      " DESC fetch first row only"
   )
     .then(function(data) {
       res.send({
