@@ -74,6 +74,7 @@ app.post("/submit", (req, res) => {
     req.body.id,
     req.body.title,
     req.body.description,
+    req.body.postcode,
     req.body.community,
     req.body.tags,
     req.body.pic1,
@@ -81,12 +82,14 @@ app.post("/submit", (req, res) => {
     req.body.pic3
   );
   db.any(
-    "INSERT INTO notice (id, title, description, community, tags, pic1, pic2, pic3) VALUES (" +
+    "INSERT INTO notice (id, title, description, postcode, community, tags, pic1, pic2, pic3) VALUES (" +
       req.body.id +
       ", '" +
       req.body.title +
       "', '" +
       req.body.description +
+      "', '" +
+      req.body.postcode +
       "', '" +
       req.body.community +
       "', '" +
