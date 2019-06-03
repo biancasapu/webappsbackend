@@ -13,6 +13,8 @@
     "body-parser": "^1.19.0",
     "cors": "^2.8.5",
     "express": "^4.17.1",
+    "fetch": "^1.1.0",
+    "node-fetch": "^2.6.0",
     "pg-promise": "^8.7.2",
     "postcodesio-client": "^0.3.4",
     "request": "^2.88.0"
