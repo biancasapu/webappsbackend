@@ -83,8 +83,8 @@ app.get("/map", (req, res) => {
       var newUrl = url + data[i]["postcode"];
       getData(newUrl);
     }
-    res.send(jsonList);
   });
+  res.send(jsonList);
 });
 
 app.get("/notice/max/:column", (req, res) => {
