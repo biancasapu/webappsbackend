@@ -47,7 +47,11 @@ app.get("/notice/:column", (req, res) => {
 });
 
 app.get("/tester", (req, res) => {
-  request("api.postcodes.io/postcodes/W67JQ", function(error, response, body) {
+  request("api.postcodes.io/postcodes/W67JQ").then(function(
+    error,
+    response,
+    body
+  ) {
     console.log(" response " + response);
     console.log(" body " + body);
     if (!error && response.statusCode == 200) {
@@ -60,6 +64,7 @@ app.get("/tester", (req, res) => {
     }
   });
 });
+
 app.get("/map", (req, res) => {
   db.any("SELECT postcode FROM notice ORDER BY id DESC").then(function(data) {
     var jsonList = [];
