@@ -35,6 +35,7 @@ app.get("/notice/:column", (req, res) => {
   console.log("Request Started");
   db.any("SELECT " + req.params.column + " FROM notice ORDER BY id DESC")
     .then(function(data) {
+      console.log(data);
       res.send({
         DATA: data
       });
