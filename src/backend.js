@@ -86,7 +86,7 @@ app.post("/submit", (req, res) => {
     req.body.pic3
   );
   db.any(
-      "INSERT INTO notice (id, title, description, postcode, community, tags, contact, lastSeen, pic1, pic2, pic3) VALUES (" +
+      "INSERT INTO notice (id, title, description, postcode, community, tags, contact, lastseen, pic1, pic2, pic3) VALUES (" +
       req.body.id +
       ", '" +
       req.body.title +
