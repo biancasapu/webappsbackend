@@ -25,13 +25,15 @@ const db = pgp(process.env.DATABASE_URL);
 
 app.get("/", (req, res) => {
   console.log("Backend running on port " + app.get("port"));
-  res.send({ PORT: app.get("port") });
+  res.send({
+    PORT: app.get("port")
+  });
 });
 
 app.get("/notice/:column", (req, res) => {
   console.log("Request Started");
   db.any("SELECT " + req.params.column + " FROM notice ORDER BY id DESC")
-    .then(function(data) {
+    .then(function (data) {
       res.send({
         DATA: data
       });
@@ -45,7 +47,7 @@ app.get("/notice/:column", (req, res) => {
 app.get("/notice/max/:column", (req, res) => {
   console.log("Request Started");
   db.any(
-    "SELECT " +
+      "SELECT " +
       req.params.column +
       " FROM notice WHERE length(" +
       req.params.column +
@@ -55,8 +57,8 @@ app.get("/notice/max/:column", (req, res) => {
       " ORDER BY " +
       req.params.column +
       " DESC fetch first row only"
-  )
-    .then(function(data) {
+    )
+    .then(function (data) {
       res.send({
         DATA: data
       });
@@ -77,12 +79,14 @@ app.post("/submit", (req, res) => {
     req.body.postcode,
     req.body.community,
     req.body.tags,
+    req.body.contact,
+    req.body.lastSeen,
     req.body.pic1,
     req.body.pic2,
     req.body.pic3
   );
   db.any(
-    "INSERT INTO notice (id, title, description, postcode, community, tags, pic1, pic2, pic3) VALUES (" +
+      "INSERT INTO notice (id, title, description, postcode, community, tags, contact, lastSeen, pic1, pic2, pic3) VALUES (" +
       req.body.id +
       ", '" +
       req.body.title +
@@ -95,14 +99,18 @@ app.post("/submit", (req, res) => {
       "', '" +
       req.body.tags +
       "', '" +
+      req.body.contact +
+      "', '" +
+      req.body.lastSeen +
+      "', '" +
       req.body.pic1 +
       "', '" +
       req.body.pic2 +
       "', '" +
       req.body.pic3 +
       "')"
-  )
-    .then(function(data) {
+    )
+    .then(function (data) {
       res.send("200");
     })
     .catch(err => {
@@ -111,6 +119,6 @@ app.post("/submit", (req, res) => {
     });
 });
 
-app.listen(app.get("port"), function() {
+app.listen(app.get("port"), function () {
   console.log("Server listening on port " + app.get("port"));
 });
