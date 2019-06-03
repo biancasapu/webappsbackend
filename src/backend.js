@@ -33,7 +33,7 @@ app.get("/", (req, res) => {
 app.get("/notice/:column", (req, res) => {
   console.log("Request Started");
   db.any("SELECT " + req.params.column + " FROM notice ORDER BY id DESC")
-    .then(function (data) {
+    .then(function(data) {
       res.send({
         DATA: data
       });
@@ -44,10 +44,32 @@ app.get("/notice/:column", (req, res) => {
     });
 });
 
+app.get("/map", (req, res) => {
+  db.any("SELECT postcode FROM notice ORDER BY id DESC").then(function(data) {
+    var jsonList = [];
+    for (var i = 0; i < data.length; ++i) {
+      var apiLatResp = request(
+        "api.postcodes.io/postcodes/" + data.i.postcode,
+        function(error, response, body) {
+          if (!error && response.statusCode == 200) {
+            console.log(body);
+            jsonList.push({
+              postcode: data.i.postcode,
+              latitude: body.result.latitude,
+              longitude: body.result.longitude
+            });
+          }
+        }
+      );
+    }
+    res.send(jsonList);
+  });
+});
+
 app.get("/notice/max/:column", (req, res) => {
   console.log("Request Started");
   db.any(
-      "SELECT " +
+    "SELECT " +
       req.params.column +
       " FROM notice WHERE length(" +
       req.params.column +
@@ -57,8 +79,8 @@ app.get("/notice/max/:column", (req, res) => {
       " ORDER BY " +
       req.params.column +
       " DESC fetch first row only"
-    )
-    .then(function (data) {
+  )
+    .then(function(data) {
       res.send({
         DATA: data
       });
@@ -86,7 +108,7 @@ app.post("/submit", (req, res) => {
     req.body.pic3
   );
   db.any(
-      "INSERT INTO notice (id, title, description, postcode, community, tags, contact, lastseen, pic1, pic2, pic3) VALUES (" +
+    "INSERT INTO notice (id, title, description, postcode, community, tags, contact, lastseen, pic1, pic2, pic3) VALUES (" +
       req.body.id +
       ", '" +
       req.body.title +
@@ -109,8 +131,8 @@ app.post("/submit", (req, res) => {
       "', '" +
       req.body.pic3 +
       "')"
-    )
-    .then(function (data) {
+  )
+    .then(function(data) {
       res.send("200");
     })
     .catch(err => {
@@ -119,6 +141,6 @@ app.post("/submit", (req, res) => {
     });
 });
 
-app.listen(app.get("port"), function () {
+app.listen(app.get("port"), function() {
   console.log("Server listening on port " + app.get("port"));
 });
