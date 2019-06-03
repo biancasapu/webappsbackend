@@ -51,12 +51,12 @@ app.get("/map", (req, res) => {
     var jsonList = [];
     for (var i = 0; i < data.length; ++i) {
       var apiLatResp = request(
-        "api.postcodes.io/postcodes/" + data.i.postcode,
+        "api.postcodes.io/postcodes/" + data[i]["postcode"],
         function(error, response, body) {
           if (!error && response.statusCode == 200) {
             console.log(body);
             jsonList.push({
-              postcode: data.i.postcode,
+              postcode: data[i]["postcode"],
               latitude: body.result.latitude,
               longitude: body.result.longitude
             });
