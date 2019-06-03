@@ -64,7 +64,7 @@ app.get("/tester", (req, res) => {
 });
 
 var jsonList = [];
-
+// just an unnecessary comment
 app.get("/map", (req, res) => {
   const url = "http://api.postcodes.io/postcodes/";
   jsonList = [];
