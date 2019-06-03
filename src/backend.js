@@ -47,7 +47,7 @@ app.get("/notice/:column", (req, res) => {
 });
 
 app.get("/tester", (req, res) => {
-  request("http://api.postcodes.io/postcodes/W67JQ").then(function(
+  request("http://api.postcodes.io/postcodes/W67JQ", function(
     error,
     response,
     body
