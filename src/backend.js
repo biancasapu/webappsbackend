@@ -54,7 +54,7 @@ app.get("/tester", (req, res) => {
       const response = await fetch(url);
       const json = await response.json();
       console.log(json);
-      jsonList.push(json);
+      res.send(json);
     } catch (error) {
       console.log(error);
     }
@@ -62,16 +62,18 @@ app.get("/tester", (req, res) => {
 
   getData(url);
 });
+
 var jsonList = [];
+
 app.get("/map", (req, res) => {
   const url = "http://api.postcodes.io/postcodes/";
   jsonList = [];
   const getData = async url => {
     try {
       const response = await fetch(url);
-      jsonList.push(await response.json());
+      const json = await response.json();
       console.log(json);
-      //jsonList.push(json);
+      jsonList.push(json);
     } catch (error) {
       console.log(error);
     }
