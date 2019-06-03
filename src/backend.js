@@ -50,9 +50,12 @@ app.get("/map", (req, res) => {
   db.any("SELECT postcode FROM notice ORDER BY id DESC").then(function(data) {
     var jsonList = [];
     for (var i = 0; i < data.length; ++i) {
+      console.log("postcode" + data[i]["postcode"]);
       var apiLatResp = request(
         "api.postcodes.io/postcodes/" + data[i]["postcode"],
         function(error, response, body) {
+          console.log(" response " + response);
+          console.log(" body " + body);
           if (!error && response.statusCode == 200) {
             console.log(body);
             jsonList.push({
