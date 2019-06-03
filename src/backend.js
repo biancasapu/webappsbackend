@@ -54,51 +54,34 @@ app.get("/tester", (req, res) => {
       const response = await fetch(url);
       const json = await response.json();
       console.log(json);
-      res.send(json);
+      es.send(json);
     } catch (error) {
       console.log(error);
     }
   };
 
   getData(url);
-
-  // fetch(
-  //   "http://api.postcodes.io/postcodes/W67JQ",
-  //   (error, response, body) => {
-  //     console.log(" response " + response);
-  //     console.log(" body " + body);
-  //     if (!error && response.statusCode == 200) {
-  //       console.log(body);
-  //       res.send({
-  //         postcode: data[i]["postcode"],
-  //         latitude: body.result.latitude,
-  //         longitude: body.result.longitude
-  //       });
-  //     }
-  //   }
-  // );
 });
 
 app.get("/map", (req, res) => {
+  const url = "http://api.postcodes.io/postcodes/";
+  var jsonList = [];
+  const getData = async url => {
+    try {
+      const response = await fetch(url);
+      const json = await response.json();
+      console.log(json);
+      jsonList.push(json);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   db.any("SELECT postcode FROM notice ORDER BY id DESC").then(function(data) {
-    var jsonList = [];
     for (var i = 0; i < data.length; ++i) {
       console.log("postcode" + data[i]["postcode"]);
-      var apiLatResp = request(
-        "api.postcodes.io/postcodes/" + data[i]["postcode"],
-        function(error, response, body) {
-          console.log(" response " + response);
-          console.log(" body " + body);
-          if (!error && response.statusCode == 200) {
-            console.log(body);
-            jsonList.push({
-              postcode: data[i]["postcode"],
-              latitude: body.result.latitude,
-              longitude: body.result.longitude
-            });
-          }
-        }
-      );
+      var newUrl = url + data[i]["postcode"];
+      getData(newUrl);
     }
     res.send(jsonList);
   });
