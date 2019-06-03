@@ -61,6 +61,15 @@ app.get("/map", (req, res) => {
   res.send(jsonList);
 });
 
+app.get("/postcodewhat", (req, res) => {
+  postcodes.lookup(
+    "W67JQ".then(datum => {
+      console.log(datum);
+      res.send(datum);
+    })
+  );
+});
+
 // app.get("/map", (req, res) => {
 //   db.any("SELECT postcode FROM notice ORDER BY id DESC").then(function(data) {
 //     var jsonList = [];
