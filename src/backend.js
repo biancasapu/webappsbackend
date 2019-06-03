@@ -3,6 +3,7 @@ var bodyparser = require("body-parser");
 var cors = require("cors");
 var request = require("request");
 const app = express();
+const fetch = require("node-fetch");
 
 var corsOptions = {
   origin: "*",
@@ -47,21 +48,35 @@ app.get("/notice/:column", (req, res) => {
 });
 
 app.get("/tester", (req, res) => {
-  request.get(
-    "http://api.postcodes.io/postcodes/W67JQ",
-    (error, response, body) => {
-      console.log(" response " + response);
-      console.log(" body " + body);
-      if (!error && response.statusCode == 200) {
-        console.log(body);
-        res.send({
-          postcode: data[i]["postcode"],
-          latitude: body.result.latitude,
-          longitude: body.result.longitude
-        });
-      }
+  const url = "http://api.postcodes.io/postcodes/W67JQ";
+  const getData = async url => {
+    try {
+      const response = await fetch(url);
+      const json = await response.json();
+      console.log(json);
+      res.send(json);
+    } catch (error) {
+      console.log(error);
     }
-  );
+  };
+
+  getData(url);
+
+  // fetch(
+  //   "http://api.postcodes.io/postcodes/W67JQ",
+  //   (error, response, body) => {
+  //     console.log(" response " + response);
+  //     console.log(" body " + body);
+  //     if (!error && response.statusCode == 200) {
+  //       console.log(body);
+  //       res.send({
+  //         postcode: data[i]["postcode"],
+  //         latitude: body.result.latitude,
+  //         longitude: body.result.longitude
+  //       });
+  //     }
+  //   }
+  // );
 });
 
 app.get("/map", (req, res) => {
