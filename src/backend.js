@@ -54,7 +54,7 @@ app.get("/tester", (req, res) => {
       const response = await fetch(url);
       const json = await response.json();
       console.log(json);
-      es.send(json);
+      jsonList.push(json);
     } catch (error) {
       console.log(error);
     }
