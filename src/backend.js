@@ -1,9 +1,7 @@
 const express = require("express");
 var bodyparser = require("body-parser");
 var cors = require("cors");
-//var request = require("request");
-var PostcodesIO = require("postcodesio-client");
-var postcodes = new PostcodesIO();
+var request = require("request");
 const app = express();
 
 var corsOptions = {
@@ -53,49 +51,26 @@ app.get("/map", (req, res) => {
     var jsonList = [];
     for (var i = 0; i < data.length; ++i) {
       console.log("postcode" + data[i]["postcode"]);
-      postcodes.lookup(data[i]["postcode"]).then(datum => {
-        console.log(datum);
-      });
+      var apiLatResp = request(
+        "api.postcodes.io/postcodes/" + data[i]["postcode"],
+        function(error, response, body) {
+          console.log(" response " + response);
+          console.log(" body " + body);
+          if (!error && response.statusCode == 200) {
+            console.log(body);
+            jsonList.push({
+              postcode: data[i]["postcode"],
+              latitude: body.result.latitude,
+              longitude: body.result.longitude
+            });
+          }
+        }
+      );
     }
+    res.send(jsonList);
   });
-  res.send(jsonList);
 });
 
-app.get("/postcodewhat", (req, res) => {
-  postcodes.lookup(
-    "W67JQ".then(datum => {
-      console.log(datum);
-      res.send(datum);
-    })
-  );
-});
-
-// app.get("/map", (req, res) => {
-//   db.any("SELECT postcode FROM notice ORDER BY id DESC").then(function(data) {
-//     var jsonList = [];
-//     for (var i = 0; i < data.length; ++i) {
-//       console.log("postcode" + data[i]["postcode"]);
-//       var apiLatResp = request(
-//         "api.postcodes.io/postcodes/" + data[i]["postcode"],
-//         function(error, response, body) {
-//           console.log(" response " + response);
-//           console.log(" body " + body);
-//           if (!error && response.statusCode == 200) {
-//             console.log(body);
-//             jsonList.push({
-//               postcode: data[i]["postcode"],
-//               latitude: body.result.latitude,
-//               longitude: body.result.longitude
-//             });
-//           }
-//         }
-//       );
-//     }
-//     res.send(jsonList);
-//   });
-// });
-
-app.get();
 app.get("/notice/max/:column", (req, res) => {
   console.log("Request Started");
   db.any(
