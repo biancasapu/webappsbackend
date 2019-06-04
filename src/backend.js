@@ -81,21 +81,23 @@ app.get("/map", (req, res) => {
 
   db.any("SELECT postcode FROM notice ORDER BY id DESC").then(function (data) {
     for (var i = 0; i < data.length; ++i) {
-      console.log("postcode" + data[i]["postcode"]);
+      console.log("postcode " + data[i]["postcode"]);
       var newUrl = url + data[i]["postcode"];
       //getData(newUrl);
       fetch(newUrl).then(
         function (response) {
+          console.log("response json " + response.json())
           return response.json()
         }
       ).then(function (json) {
-          jsonList.push(json)
-        }
-
-      )
+        console.log("add to list " + json)
+        jsonList.push(json)
+      })
     }
-  });
-  res.send(jsonList);
+  }).then(function () {
+    console.log("list " + jsonList)
+    res.send(jsonList);
+  })
 });
 
 app.get("/notice/max/:column", (req, res) => {
