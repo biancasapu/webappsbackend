@@ -74,7 +74,11 @@ app.get("/map", (req, res) => {
       const response = await fetch(url);
       const json = await response.json();
       console.log(json);
-      jsonList.push(json);
+      jsonList.push({
+        postcode: json.result.postcode,
+        latitude: json.result.latitude,
+        longitude: json.result.longitude
+      });
     } catch (error) {
       console.log(error);
     }
