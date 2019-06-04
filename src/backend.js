@@ -46,6 +46,21 @@ app.get("/notice/:column", (req, res) => {
     });
 });
 
+app.get("/search/:tag", (req, res) => {
+  console.log("Request Started");
+  db.any("SELECT * FROM notice WHERE tags LIKE '%" + req.params.tag + "%'")
+    .then(function (data) {
+      console.log(data);
+      res.send(data);
+    })
+    .catch(err => {
+      console.log(err);
+      res.send("500");
+    });
+});
+
+
+
 app.get("/tester", (req, res) => {
   const url = "http://api.postcodes.io/postcodes/W67JQ";
   const getData = async url => {
