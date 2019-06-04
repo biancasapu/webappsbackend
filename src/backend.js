@@ -81,6 +81,7 @@ app.get("/tester", (req, res) => {
   };
 
   getData(url);
+
 });
 
 var jsonList = [];
