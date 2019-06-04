@@ -73,8 +73,7 @@ app.get("/map", (req, res) => {
     try {
       const response = await fetch(url);
       const json = await response.json();
-      console.log(json);
-      jsonList.push(json);
+      console.log(json).then(jsonList.push(json));
     } catch (error) {
       console.log(error);
     }
