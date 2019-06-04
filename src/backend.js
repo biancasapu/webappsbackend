@@ -126,9 +126,9 @@ app.get("/notice/max/:column", (req, res) => {
       " DESC fetch first row only"
     )
     .then(function (data) {
-      res.send({
-        DATA: data
-      });
+      res.send(
+        data
+      );
     })
     .catch(err => {
       console.log(err);
