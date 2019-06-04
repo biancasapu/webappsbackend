@@ -73,20 +73,23 @@ app.get("/map", (req, res) => {
     try {
       const response = await fetch(url);
       const json = await response.json();
-      console.log(json).then(jsonList.push(json));
+      console.log(json);
+      jsonList.push(json);
     } catch (error) {
       console.log(error);
     }
   };
 
-  db.any("SELECT postcode FROM notice ORDER BY id DESC").then(function(data) {
+  db.any("SELECT postcode FROM notice ORDER BY id DESC").then(async function(
+    data
+  ) {
     for (var i = 0; i < data.length; ++i) {
       console.log("postcode " + data[i]["postcode"]);
       var newUrl = url + data[i]["postcode"];
-      getData(newUrl);
+      await getData(newUrl);
     }
+    res.send(jsonList);
   });
-  res.send(jsonList);
 });
 
 app.get("/notice/max/:column", (req, res) => {
