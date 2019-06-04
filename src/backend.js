@@ -1,3 +1,4 @@
+require('dotenv').config()
 const express = require("express");
 var bodyparser = require("body-parser");
 var cors = require("cors");
@@ -68,36 +69,25 @@ var jsonList = [];
 app.get("/map", (req, res) => {
   const url = "http://api.postcodes.io/postcodes/";
   jsonList = [];
-  // const getData = async url => {
-  //   try {
-  //     const response = await fetch(url);
-  //     const json = await response.json();
-  //     console.log(json);
-  //     jsonList.push(json);
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // };
+  const getData = async url => {
+    try {
+      const response = await fetch(url);
+      const json = await response.json();
+      console.log(json);
+      jsonList.push(json);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   db.any("SELECT postcode FROM notice ORDER BY id DESC").then(function (data) {
     for (var i = 0; i < data.length; ++i) {
       console.log("postcode " + data[i]["postcode"]);
       var newUrl = url + data[i]["postcode"];
       //getData(newUrl);
-      fetch(newUrl).then(
-        function (response) {
-          console.log("response json " + response.json())
-          return response.json()
-        }
-      ).then(function (json) {
-        console.log("add to list " + json)
-        jsonList.push(json)
-      })
     }
-  }).then(function () {
-    console.log("list " + jsonList)
-    res.send(jsonList);
   })
+  res.send(jsonList);
 });
 
 app.get("/notice/max/:column", (req, res) => {
