@@ -84,7 +84,7 @@ app.get("/map", (req, res) => {
     for (var i = 0; i < data.length; ++i) {
       console.log("postcode " + data[i]["postcode"]);
       var newUrl = url + data[i]["postcode"];
-      //getData(newUrl);
+      getData(newUrl);
     }
   });
   res.send(jsonList);
