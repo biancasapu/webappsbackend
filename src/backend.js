@@ -35,7 +35,7 @@ app.get("/", (req, res) => {
 app.get("/notice/:column", (req, res) => {
   console.log("Request Started");
   db.any("SELECT " + req.params.column + " FROM notice ORDER BY id DESC")
-    .then(function(data) {
+    .then(function (data) {
       console.log(data);
       res.send({
         DATA: data
@@ -68,22 +68,31 @@ var jsonList = [];
 app.get("/map", (req, res) => {
   const url = "http://api.postcodes.io/postcodes/";
   jsonList = [];
-  const getData = async url => {
-    try {
-      const response = await fetch(url);
-      const json = await response.json();
-      console.log(json);
-      jsonList.push(json);
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  // const getData = async url => {
+  //   try {
+  //     const response = await fetch(url);
+  //     const json = await response.json();
+  //     console.log(json);
+  //     jsonList.push(json);
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
 
-  db.any("SELECT postcode FROM notice ORDER BY id DESC").then(function(data) {
+  db.any("SELECT postcode FROM notice ORDER BY id DESC").then(function (data) {
     for (var i = 0; i < data.length; ++i) {
       console.log("postcode" + data[i]["postcode"]);
       var newUrl = url + data[i]["postcode"];
-      getData(newUrl);
+      //getData(newUrl);
+      fetch(newUrl).then(
+        function (response) {
+          return response.json()
+        }
+      ).then(function (json) {
+          jsonList.push(json)
+        }
+
+      )
     }
   });
   res.send(jsonList);
@@ -92,7 +101,7 @@ app.get("/map", (req, res) => {
 app.get("/notice/max/:column", (req, res) => {
   console.log("Request Started");
   db.any(
-    "SELECT " +
+      "SELECT " +
       req.params.column +
       " FROM notice WHERE length(" +
       req.params.column +
@@ -102,8 +111,8 @@ app.get("/notice/max/:column", (req, res) => {
       " ORDER BY " +
       req.params.column +
       " DESC fetch first row only"
-  )
-    .then(function(data) {
+    )
+    .then(function (data) {
       res.send({
         DATA: data
       });
@@ -131,7 +140,7 @@ app.post("/submit", (req, res) => {
     req.body.pic3
   );
   db.any(
-    "INSERT INTO notice (id, title, description, postcode, community, tags, contact, lastseen, pic1, pic2, pic3) VALUES (" +
+      "INSERT INTO notice (id, title, description, postcode, community, tags, contact, lastseen, pic1, pic2, pic3) VALUES (" +
       req.body.id +
       ", '" +
       req.body.title +
@@ -154,8 +163,8 @@ app.post("/submit", (req, res) => {
       "', '" +
       req.body.pic3 +
       "')"
-  )
-    .then(function(data) {
+    )
+    .then(function (data) {
       res.send("200");
     })
     .catch(err => {
@@ -164,6 +173,6 @@ app.post("/submit", (req, res) => {
     });
 });
 
-app.listen(app.get("port"), function() {
+app.listen(app.get("port"), function () {
   console.log("Server listening on port " + app.get("port"));
 });
