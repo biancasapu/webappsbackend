@@ -46,9 +46,15 @@ app.get("/notice/:column", (req, res) => {
     });
 });
 
-app.get("/search/:tag", (req, res) => {
+app.get("/search/:tags", (req, res) => {
   console.log("Request Started");
-  db.any("SELECT * FROM notice WHERE tags LIKE '%" + req.params.tag + "%'")
+  console.log(req.params.tags)
+  var tags = req.params.tags.split(" ")
+  console.log(tags)
+  tags = tags.join("%")
+  console.log(tags)
+
+  db.any("SELECT * FROM notice WHERE tags LIKE '%" + tags + "%'")
     .then(function (data) {
       console.log(data);
       res.send(data);
