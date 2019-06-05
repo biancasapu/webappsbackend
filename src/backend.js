@@ -103,7 +103,10 @@ app.get("/map", (req, res) => {
         id: obj.id,
         postcode: json.result.postcode,
         latitude: json.result.latitude,
-        longitude: json.result.longitude
+        longitude: json.result.longitude,
+        pic1: obj.pic1,
+        pic2: obj.pic2,
+        pic3: obj.pic3
       });
       //jsonList.push(json.result);
       //jsonList.push(json);
@@ -112,13 +115,19 @@ app.get("/map", (req, res) => {
     }
   };
 
-  db.any("SELECT id,postcode FROM notice ORDER BY id DESC").then(async function(
-    data
-  ) {
+  db.any(
+    "SELECT id,postcode, pic1, pic2, pic3 FROM notice ORDER BY id DESC"
+  ).then(async function(data) {
     for (var i = 0; i < data.length; ++i) {
       console.log("postcode " + data[i]["postcode"]);
       var newUrl = url + data[i]["postcode"];
-      var encapsulatingJson = { url: newUrl, id: data[i]["id"] };
+      var encapsulatingJson = {
+        url: newUrl,
+        id: data[i]["id"],
+        pic1: data[i]["pic1"],
+        pic2: data[i]["pic2"],
+        pic3: data[i]["pic3"]
+      };
       await getData(encapsulatingJson);
     }
     res.send(jsonList);
