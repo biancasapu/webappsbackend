@@ -94,28 +94,32 @@ var jsonList = [];
 app.get("/map", (req, res) => {
   const url = "http://api.postcodes.io/postcodes/";
   jsonList = [];
-  const getData = async url => {
+  const getData = async obj => {
     try {
-      const response = await fetch(url);
+      const response = await fetch(obj.url);
       const json = await response.json();
       console.log(json);
       jsonList.push({
+        id: obj.id,
+        postcode: json.result.postcode,
         latitude: json.result.latitude,
         longitude: json.result.longitude
       });
+      //jsonList.push(json.result);
       //jsonList.push(json);
     } catch (error) {
       console.log(error);
     }
   };
 
-  db.any("SELECT postcode FROM notice ORDER BY id DESC").then(async function(
+  db.any("SELECT id,postcode FROM notice ORDER BY id DESC").then(async function(
     data
   ) {
     for (var i = 0; i < data.length; ++i) {
       console.log("postcode " + data[i]["postcode"]);
       var newUrl = url + data[i]["postcode"];
-      await getData(newUrl);
+      var encapsulatingJson = { url: newUrl, id: data[i]["id"] };
+      await getData(encapsulatingJson);
     }
     res.send(jsonList);
   });
