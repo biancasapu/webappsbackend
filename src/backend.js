@@ -48,24 +48,32 @@ app.get("/notice/:column", (req, res) => {
 
 app.get("/search/:tags", (req, res) => {
   console.log("Request Started");
-  console.log(req.params.tags)
-  var tags = req.params.tags.split(" ")
-  console.log(tags)
-  tags = tags.join("%")
-  console.log(tags)
+  console.log(req.params.tags);
+  var tags = req.params.tags.split(" ");
+  console.log(tags);
+  // tags = tags.join("%");
+  // console.log(tags);
 
-  db.any("SELECT * FROM notice WHERE tags LIKE '%" + tags + "%'")
+  var ids = [];
+
+  var tagQuery = "SELECT * FROM notice WHERE tags LIKE '%" + tags[0] + "%'"
+  for (var i = 1; i < tags.length; i++) {
+    var tagQuery = tagQuery + " AND tags LIKE '%" + tags[i] + "%'";
+  }
+
+  db.any(tagQuery)
     .then(function (data) {
       console.log(data);
       res.send(data);
     })
+
     .catch(err => {
       console.log(err);
       res.send("500");
     });
+
+
 });
-
-
 
 app.get("/tester", (req, res) => {
   const url = "http://api.postcodes.io/postcodes/W67JQ";
@@ -81,7 +89,6 @@ app.get("/tester", (req, res) => {
   };
 
   getData(url);
-
 });
 
 var jsonList = [];
@@ -127,9 +134,7 @@ app.get("/notice/max/:column", (req, res) => {
       " DESC fetch first row only"
     )
     .then(function (data) {
-      res.send(
-        data
-      );
+      res.send(data);
     })
     .catch(err => {
       console.log(err);
