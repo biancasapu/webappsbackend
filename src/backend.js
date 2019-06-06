@@ -109,7 +109,9 @@ app.get("/map", (req, res) => {
         longitude: json.result.longitude,
         pic1: obj.pic1,
         pic2: obj.pic2,
-        pic3: obj.pic3
+        pic3: obj.pic3,
+        lastseen: obj.lastseen,
+        contact: obj.contact
       });
     } catch (error) {
       console.log(error);
@@ -117,7 +119,7 @@ app.get("/map", (req, res) => {
   };
 
   db.any(
-    "SELECT id,title, description, tags, postcode, pic1, pic2, pic3 FROM notice ORDER BY id DESC"
+    "SELECT id, lastseen, contact, title, description, tags, postcode, pic1, pic2, pic3 FROM notice ORDER BY id DESC"
   ).then(async function(data) {
     for (var i = 0; i < data.length; ++i) {
       console.log("postcode " + data[i]["postcode"]);
@@ -130,7 +132,9 @@ app.get("/map", (req, res) => {
         pic1: data[i]["pic1"],
         pic2: data[i]["pic2"],
         pic3: data[i]["pic3"],
-        tags: data[i]["tags"]
+        tags: data[i]["tags"],
+        contact: data[i]["contact"],
+        lastseen: data[i]["lastseen"]
       };
       await getData(encapsulatingJson);
     }
