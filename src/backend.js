@@ -107,6 +107,7 @@ app.get("/map", (req, res) => {
         postcode: json.result.postcode,
         latitude: json.result.latitude,
         longitude: json.result.longitude,
+        pct: json.result.primary_care_trust,
         pic1: obj.pic1,
         pic2: obj.pic2,
         pic3: obj.pic3,
