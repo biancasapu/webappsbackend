@@ -35,9 +35,35 @@ app.get("/", (req, res) => {
 
 app.get("/notice/:column", (req, res) => {
   console.log("Request Started");
-  db.any("SELECT " + req.params.column + " FROM notice ORDER BY id DESC")
-    .then(function(data) {
+
+
+  const updateData = async obj => {
+    try {
+      var newSeen = parseInt(obj.seenby) + 1;
+      db.any(
+        "UPDATE notice SET seenby = " + newSeen + " WHERE id = '" + obj.id + "'"
+      );
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+
+  db.any(
+    "SELECT id , seenby , " +
+      req.params.column +
+      " FROM notice ORDER BY id DESC"
+  )
+    .then(async function(data) {
       console.log(data);
+      for (var i = 0; i < data.length; ++i) {
+        var encapsulatingJson = {
+          id: data[i]["id"],
+          seenby: data[i]["seenby"]
+        };
+        await updateData(encapsulatingJson);
+      }
+
       res.send(data);
     })
     .catch(err => {
@@ -54,6 +80,18 @@ app.get("/search/:tags", (req, res) => {
   // tags = tags.join("%");
   // console.log(tags);
 
+
+  const updateData = async obj => {
+    try {
+      var newSeen = parseInt(obj.seenby) + 1;
+      db.any(
+        "UPDATE notice SET seenby = " + newSeen + " WHERE id = '" + obj.id + "'"
+      );
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   var ids = [];
 
   var tagQuery = "SELECT * FROM notice WHERE tags LIKE '%" + tags[0] + "%'";
@@ -64,6 +102,13 @@ app.get("/search/:tags", (req, res) => {
   db.any(tagQuery)
     .then(function(data) {
       console.log(data);
+      for (var i = 0; i < data.length; ++i) {
+        var encapsulatingJson = {
+          id: data[i]["id"],
+          seenby: data[i]["seenby"]
+        };
+        await updateData(encapsulatingJson);
+      }
       res.send(data);
     })
 
