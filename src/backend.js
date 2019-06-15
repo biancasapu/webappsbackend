@@ -180,10 +180,11 @@ app.post("/submit", (req, res) => {
     req.body.lastSeen,
     req.body.pic1,
     req.body.pic2,
-    req.body.pic3
+    req.body.pic3,
+    req.body.seenby
   );
   db.any(
-    "INSERT INTO notice (id, title, description, postcode, community, tags, contact, lastseen, pic1, pic2, pic3) VALUES (" +
+    "INSERT INTO notice (id, title, description, postcode, community, tags, contact, lastseen, pic1, pic2, pic3, seenby) VALUES (" +
       req.body.id +
       ", '" +
       req.body.title +
@@ -205,6 +206,8 @@ app.post("/submit", (req, res) => {
       req.body.pic2 +
       "', '" +
       req.body.pic3 +
+      "', '" +
+      req.body.seenby +
       "')"
   )
     .then(function(data) {
