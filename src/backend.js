@@ -36,7 +36,6 @@ app.get("/", (req, res) => {
 app.get("/notice/:column", (req, res) => {
   console.log("Request Started");
 
-
   const updateData = async obj => {
     try {
       var newSeen = parseInt(obj.seenby) + 1;
@@ -47,7 +46,6 @@ app.get("/notice/:column", (req, res) => {
       console.log(error);
     }
   };
-
 
   db.any(
     "SELECT id , seenby , " +
@@ -80,7 +78,6 @@ app.get("/search/:tags", (req, res) => {
   // tags = tags.join("%");
   // console.log(tags);
 
-
   const updateData = async obj => {
     try {
       var newSeen = parseInt(obj.seenby) + 1;
@@ -100,7 +97,7 @@ app.get("/search/:tags", (req, res) => {
   }
 
   db.any(tagQuery)
-    .then(function(data) {
+    .then(async function(data) {
       console.log(data);
       for (var i = 0; i < data.length; ++i) {
         var encapsulatingJson = {
