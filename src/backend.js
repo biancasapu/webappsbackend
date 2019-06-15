@@ -33,6 +33,39 @@ app.get("/", (req, res) => {
   });
 });
 
+app.get("/hit/:id", (req, res) => {
+  console.log("Request Started");
+
+  const updateData = async obj => {
+    try {
+      var newSeen = parseInt(obj.seenby) + 1;
+      db.any(
+        "UPDATE notice SET seenby = " + newSeen + " WHERE id = '" + obj.id + "'"
+      );
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  db.any("SELECT seenby FROM notice WHERE id like '" + req.params.id + "'")
+    .then(async function(data) {
+      console.log(data);
+      for (var i = 0; i < data.length; ++i) {
+        var encapsulatingJson = {
+          id: req.params.id,
+          seenby: data[i]["seenby"]
+        };
+        await updateData(encapsulatingJson);
+      }
+
+      res.send(data);
+    })
+    .catch(err => {
+      console.log(err);
+      res.send("500");
+    });
+});
+
 app.get("/notice/:column", (req, res) => {
   console.log("Request Started");
 
