@@ -154,7 +154,8 @@ app.get("/map", (req, res) => {
         pic2: obj.pic2,
         pic3: obj.pic3,
         lastseen: obj.lastseen,
-        contact: obj.contact
+        contact: obj.contact,
+        seenby: obj.seenby
       });
     } catch (error) {
       console.log(error);
@@ -162,7 +163,7 @@ app.get("/map", (req, res) => {
   };
 
   db.any(
-    "SELECT id, lastseen, contact, title, description, tags, postcode, pic1, pic2, pic3 FROM notice ORDER BY id DESC"
+    "SELECT id, seenby, lastseen, contact, title, description, tags, postcode, pic1, pic2, pic3 FROM notice ORDER BY id DESC"
   ).then(async function(data) {
     for (var i = 0; i < data.length; ++i) {
       console.log("postcode " + data[i]["postcode"]);
@@ -177,7 +178,8 @@ app.get("/map", (req, res) => {
         pic3: data[i]["pic3"],
         tags: data[i]["tags"],
         contact: data[i]["contact"],
-        lastseen: data[i]["lastseen"]
+        lastseen: data[i]["lastseen"],
+        seenby: data[i]["seenby"]
       };
       await getData(encapsulatingJson);
     }
@@ -185,6 +187,8 @@ app.get("/map", (req, res) => {
   });
 });
 
+// There is no need for incrementing seenby anywhere in this endpoint because
+// you're just retrieving the maximum value of a field, and no other info about it
 app.get("/notice/max/:column", (req, res) => {
   console.log("Request Started");
   db.any(
