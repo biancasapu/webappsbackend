@@ -83,7 +83,7 @@ app.get("/notice/:column", (req, res) => {
   db.any(
     "SELECT id , seenby , " +
       req.params.column +
-      " FROM notice ORDER BY id DESC"
+      " FROM notice ORDER BY seenby DESC"
   )
     .then(async function(data) {
       console.log(data);
