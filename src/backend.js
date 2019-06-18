@@ -175,6 +175,7 @@ app.get("/map", (req, res) => {
       //console.log(json);
       if (obj.hasOwnProperty("isuser")) {
         jsonList.push({
+          isuser: "true",
           userid: obj.userid,
           description: obj.description,
           postcode: json.result.postcode,
