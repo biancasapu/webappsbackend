@@ -164,32 +164,43 @@ app.get("/tester", (req, res) => {
   getData(url);
 });
 
-var jsonList = [];
 // just an unnecessary comment
 app.get("/map", (req, res) => {
   const url = "http://api.postcodes.io/postcodes/";
   jsonList = [];
+  var overallJson;
   const getData = async obj => {
     try {
+      console.log(obj);
       const response = await fetch(obj.url);
       const json = await response.json();
-      console.log(json);
-      jsonList.push({
-        id: obj.id,
-        title: obj.title,
-        description: obj.description,
-        tags: obj.tags,
-        postcode: json.result.postcode,
-        latitude: json.result.latitude,
-        longitude: json.result.longitude,
-        pct: json.result.primary_care_trust,
-        pic1: obj.pic1,
-        pic2: obj.pic2,
-        pic3: obj.pic3,
-        lastseen: obj.lastseen,
-        contact: obj.contact,
-        seenby: obj.seenby
-      });
+      //console.log(json);
+      if (obj.hasOwnProperty("isuser")) {
+        jsonList.push({
+          userid: obj.userid,
+          description: obj.description,
+          postcode: json.result.postcode,
+          latitude: json.result.latitude,
+          longitude: json.result.longitude
+        });
+      } else {
+        jsonList.push({
+          id: obj.id,
+          title: obj.title,
+          description: obj.description,
+          tags: obj.tags,
+          postcode: json.result.postcode,
+          latitude: json.result.latitude,
+          longitude: json.result.longitude,
+          pct: json.result.primary_care_trust,
+          pic1: obj.pic1,
+          pic2: obj.pic2,
+          pic3: obj.pic3,
+          lastseen: obj.lastseen,
+          contact: obj.contact,
+          seenby: obj.seenby
+        });
+      }
     } catch (error) {
       console.log(error);
     }
@@ -216,8 +227,40 @@ app.get("/map", (req, res) => {
       };
       await getData(encapsulatingJson);
     }
-    res.send(jsonList);
+    db.any("SELECT * from users order by userid DESC").then(async function(
+      data
+    ) {
+      for (var i = 0; i < data.length; ++i) {
+        console.log("user postcode " + data[i]["postcode"]);
+        var newUrl = url + data[i]["postcode"];
+        var encapsulatingJson = {
+          url: newUrl,
+          id: data[i]["userid"],
+          isuser: data[i]["isuser"],
+          description: data[i]["description"],
+          contact: data[i]["contact"]
+        };
+        await getData(encapsulatingJson);
+      }
+      res.send(jsonList);
+    });
   });
+
+  // db.any("SELECT * from users order by userid DESC").then(async function(data) {
+  //   for (var i = 0; i < data.length; ++i) {
+  //     console.log("user postcode " + data[i]["postcode"]);
+  //     var newUrl = url + data[i]["postcode"];
+  //     var encapsulatingJson = {
+  //       url: newUrl,
+  //       id: data[i]["userid"],
+  //       isuser: data[i]["isuser"],
+  //       description: data[i]["description"],
+  //       contact: data[i]["contact"]
+  //     };
+  //     await getData(encapsulatingJson);
+  //   }
+  //   res.send(jsonList);
+  // });
 });
 
 // There is no need for incrementing seenby anywhere in this endpoint because
