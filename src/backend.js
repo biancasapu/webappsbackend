@@ -177,6 +177,11 @@ app.get("/map", (req, res) => {
         jsonList.push({
           isuser: "true",
           userid: obj.userid,
+          contact: obj.contact,
+          pic1: obj.pic1,
+          pic2: obj.pic2,
+          pic3: obj.pic3,
+          name: obj.name,
           description: obj.description,
           postcode: json.result.postcode,
           latitude: json.result.latitude,
@@ -235,6 +240,10 @@ app.get("/map", (req, res) => {
         var encapsulatingJson = {
           url: newUrl,
           id: data[i]["userid"],
+          name: data[i]["name"],
+          pic1: data[i]["pic1"],
+          pic2: data[i]["pic2"],
+          pic3: data[i]["pic3"],
           isuser: data[i]["isuser"],
           description: data[i]["description"],
           contact: data[i]["contact"]
