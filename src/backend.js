@@ -172,7 +172,6 @@ app.get("/map", (req, res) => {
       console.log(obj);
       const response = await fetch(obj.url);
       const json = await response.json();
-      //console.log(json);
       if (obj.hasOwnProperty("isuser")) {
         jsonList.push({
           isuser: "true",
